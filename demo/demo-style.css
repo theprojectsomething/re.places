@@ -1,0 +1,362 @@
+html {
+  margin: 0;
+  background-image: linear-gradient(256deg,#00aeff,#3369e7);
+  min-height: 100vh;
+  font-family: monospace;
+  color: white;
+}
+
+body {
+  display: flex;
+  margin: auto;
+  flex-direction: column;
+  padding: 1em;
+  max-width: 1024px;
+}
+
+a {
+  color: inherit;
+  text-decoration-style: dotted;
+  text-decoration-thickness: 1px;
+}
+
+a:not(.btn):hover {
+  text-decoration: none;
+  background: white;
+  color: #3e396b;
+  box-shadow: -0.1em 0 white, 0.1em 0 white;
+}
+
+.bg-white a:not(.btn):hover {
+  background: #3e396b;
+  color: white;
+  box-shadow: -0.1em 0 #3e396b, 0.1em 0 #3e396b;
+}
+
+.btn {
+  border-radius: 1.5em;
+  background: linear-gradient(80deg,#00aeff,#3369e7);
+  text-decoration: none;
+  padding: 0.6em 2em;
+  color: white;
+  border: 1px solid #3369e7;
+  border: 1px solid #00aeff;
+  box-shadow: 0 1px 10px #3e396b33,0 2px 4px 0 #3e396b1a;
+}
+
+.btn:hover {
+  background: #00aeff11;
+  color: inherit;
+  box-shadow: none;
+}
+
+code {
+  padding: 0.1em 0.2em;
+  font-size: 0.9em;
+  color: #c7254e;
+  background-color: #f9f2f4;
+  border-radius: 0.2em;
+  white-space: nowrap;
+}
+
+header {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 2em 0 0.4em;
+}
+
+header > div {
+  width: 60%;
+  align-self: center;
+}
+
+header h1 {
+  margin-right: 1em;
+  font-size: min(10vw, 4em);
+  font-weight: 400;
+  line-height: 0.8em;
+  margin-top: 0;
+}
+
+header h1 small {
+  font-size: 0.6em;
+  opacity: 0.35;
+}
+
+header h1 span {
+  text-transform: uppercase;
+  opacity: 0.35;
+}
+
+header h1 + p {
+  font-size: 1.6em;
+  line-height: 1.6em;
+}
+
+header img {
+  margin-left: auto;
+  max-width: 40%;
+  margin-top: 2em;
+  align-self: flex-start;
+}
+
+header > p {
+  font-size: 1.2em;
+  line-height: 1.6em;
+  max-width: 56rem;
+  margin-top: 0;
+}
+
+.features {
+  color: #3e396b;
+  margin-top: 8em;
+  padding: 4em 0 0;
+  background: white;
+  line-height:  1.3em;
+  box-shadow: -2em 0 white, 2em 0 white;
+  margin-bottom: 12em;
+}
+
+.features:before, .features:after {
+  content: '';
+  width: 100vw;
+  position: absolute;
+  background: inherit;
+  left: 0;
+  height: 15em;
+  transform: skewY(-2.75deg) translateY(-45%);
+  z-index: -1;
+}
+
+.features:before {
+  box-shadow: 0 14em 0 0 white;
+}
+
+.features:after {
+  box-shadow: 0 -14em 0 0 white;
+}
+
+.features h2 {
+  font-size: 1.6em;
+  text-align: center;
+  margin-bottom: 2em;
+}
+
+.features ul {
+  padding-left: 0;
+}
+
+.features li {
+  margin-bottom: 0.4em;
+  list-style:  none;
+  text-align: center;
+}
+
+.features p {
+  text-align: center;
+  max-width:  54em;
+  margin:  0 auto;
+}
+
+.features li::after {
+  content: '';
+  display: block;
+  width: 5em;
+  border-bottom: 1px dashed #3e396b55;
+  margin: 0.9em auto;
+}
+
+.actions {
+  margin-top: 4em;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+@media (max-width: 600px) {
+  .actions {
+    flex-direction: column;
+  }
+}
+
+.actions small {
+  display: inline-block;
+  margin: 1em;
+}
+
+label[for="search"], #map, #json {
+  margin-bottom: 1.4rem;
+}
+
+#search:not(.ap-input), #map, #json {
+  border-radius: 0.3rem;  
+}
+
+label[for="search"] {
+  display: flex;
+  flex-direction: column;
+}
+
+label[for="search"] > em {
+  color:  white;
+  opacity:  0.65;
+  margin: 0 0 0.4em 2em;
+  display: flex;
+  align-items: center;
+}
+
+label[for="search"] > em::before {
+  content:  '⤺';
+  font-size: 1.7em;
+  line-height: 0.5em;
+  margin: 0 0.4em 0.2em 0;
+}
+
+#search {
+  padding: 0.4em;
+  border: solid 1px #ffffff80;
+  box-shadow: 0 1px 10px #0003,0 2px 4px 0 #0000001a;
+  font-weight: 300;
+  font-size: 1.4rem;
+  padding: 0.6em;
+  height: auto;
+  font-family: sans-serif;
+}
+
+.algolia-places {
+  color: #3e396b;
+}
+
+.ap-name {
+  margin-left: -0.4em;
+}
+
+.ap-address {
+  left: -0.6em;
+  position: relative;
+  color: currentColor;
+  opacity: 0.6;
+}
+
+.ap-suggestion-icon svg {
+  fill: currentColor !important;
+  opacity: 0.4;
+}
+
+.ap-cursor .ap-suggestion-icon svg {
+  opacity: 0.6;
+}
+
+.controls,
+.toggle,
+.controls label {
+  display: flex;
+  align-items: center;
+}
+
+.controls input {
+  margin: 0.2em 0.5em 0.2em 0.75em;
+}
+
+.countries {
+  margin-left: auto;
+  margin-top: -0.6em;
+  font-size:  0.65em;
+  display: flex;
+}
+
+@media (max-width: 600px) {
+  .countries {
+    flex-direction: column;
+  }
+}
+
+.countries input {
+  width: 1em;
+  height: 1em;
+  border-radius: 0.4em;
+  border:  none;
+}
+
+.output {
+  position: relative;
+  margin-top: 1em;
+  height: 56.25vw;
+  max-height: 512px;
+}
+
+.output #json {
+
+}
+
+#map, #json {
+  width: 100%;
+  height: 100%;
+}
+
+#map {
+  position: absolute !important;
+}
+
+.output:not([data-toggle="map"]) #map {
+  visibility: hidden;
+}
+
+.output:not([data-toggle="json"]) #json {
+  display: none;
+}
+
+
+.leaflet-popup-content {
+  text-align: center;
+}
+#json {
+  white-space: pre;
+  font-family: monospace;
+  font-size: 0.65em;
+  padding: 1em;
+  background: #1d3557;
+  color: #a0c4ff;
+  overflow: auto;
+  display: block;
+  box-sizing: border-box;
+}
+@keyframes search {
+  0% { content: '...'; }
+  30% { content: '..'; }
+  60% { content: '.'; }
+  90% { content: ''; }
+}
+#json[data-query=""]::before,
+#json[data-query=""]::after,
+#json:not([data-query])::before,
+#json:not([data-query])::after {
+  display: none;
+}
+#json::before, #json::after {
+  color: #fdffb6;
+}
+#json[data-query]:empty::before {
+  content: 'searching';
+}
+#json[data-query]:empty::after {
+  content: '';
+  animation: search 2s steps(4, end) alternate infinite;
+}
+span[data-p] { color: #ffc6ff; }
+span[data-s] { color: #fdffb6; }
+span[data-n] { color: #9bf6ff; }
+
+footer {
+  margin: 2em 0;
+  text-align: center;
+  line-height: 1.4em;
+}
+
+footer span:first-child {
+  display: block;
+  opacity: 0.75;
+  margin-bottom:  0.4em;
+}

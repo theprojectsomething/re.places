@@ -1,0 +1,5 @@
+node_modules
+simplemaps_worldcities*
+*.br
+*.csv
+db/*.txt

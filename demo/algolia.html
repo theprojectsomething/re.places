@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Re.Places: Algolia demo</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="the serverless cities database">
+  <link rel="icon" type="image/svg+xml" href="demo-icon.svg">
+
+  <!-- stylesheet for demo purposes only -->
+  <link type="text/css" rel="stylesheet" href="demo-style.css">
+</head>
+
+<body>
+
+<label for="search">
+  <em><span>This is the Algolia Places version (batteries included!) ... switch to the <a href="standalone.html">standalone version</a></span></em>
+  <input id="search" data-action="search" placeholder="🚀 Search a city" autocomplete="off">
+</label>
+
+<div class="controls">
+  <div class="countries">
+    <label>
+      <input name="country" data-action="loc" data-bounds="[[-8,110],[-44,158]]" value="Australia" data-country="au" type="radio" checked>
+      Australia
+    </label>
+    <label>
+      <input name="country" data-action="loc" data-bounds="[[42,-5],[51,8]]" value="France" data-country="fr" type="radio">
+      France
+    </label>
+    <label>
+      <input name="country" data-action="loc" value type="radio">
+      Global
+    </label>
+  </div>
+</div>
+<script>
+// NOTE: HTTPS is required!
+// If you are running the demo locally and don't have a cert see here:
+// https://stackoverflow.com/q/21397809/720204 
+if (!location.protocol.startsWith('https')) {
+  alert('The Re.Places Algolia polyfill requires HTTPS. View source for more info.');
+}
+</script>
+
+<script type="module">
+// STEP 1 --> Import Algolia Places
+import 'https://cdn.jsdelivr.net/npm/places.js@1.19.0';
+
+// STEP 2 --> Import Re.Places (installs a service worker)
+// (!) if you are running your own service worker see step (2.a) below
+// If you aren't running other service workers on your domain you can simply
+// polyfill the Algolia Places API by importing the RePlaces Algolia script
+// directly after (algolia) places.js ... the replaces script is dual purpose
+// and like any service worker must be hosted locally, usually at the root.
+// In this scenario all other dependencies will be served from a CDN. To change
+// this behaviour please review the installation instructions in the README
+import '/re.places.algolia.js';
+
+// STEP 2.a --> Only required if you already use a service worker on your domain
+// In this case you should instead use 'importScript' to load the Re.Places
+// service worker script [re.places.algolia.sw.js] in your own service worker.
+// Re.Places does not use any caching strategy, and only intercepts calls to
+// the Algolia API. Imported at the top of your script it will work in tandem
+// with any logic already in place. You can import a local version or from a CDN:
+/*** [at the top of your site's sw.js] **
+  let replacesSW = 'path/to/re.places.algolia.sw.js'
+  // OR CDN: note that it is important to specify a version to enable updates
+  replacesSW = 'https://cdn.jsdelivr.net/npm/re.places.js@{{version}}/src/re.places.algolia.sw.js'
+  self.importScripts(replacesSW)
+  // YOUR SERVICE WORKER LOGIC GOES HERE
+***/
+
+// [ignore] this import is specific to this demo
+import util from './demo-util.js';
+
+// STEP 3 --> Initialise Algolia Places (as usual)
+// ... and that's it
+const placesAutocomplete = places({
+  // You can safely exclude the next two lines now
+  // appId: '<YOU_NO_LONGER_NEED_THIS>',
+  // apiKey: '<YOU_NO_LONGER_NEED_THIS>',
+  container: document.querySelector('input'),
+  type: 'city',
+  // aroundLatLng: '-16, 145',
+  // aroundLatLngViaIP: false,
+  // aroundRadius: 3000000,
+  // insideBoundingBox: '-10,154,-29,138',
+  // insidePolygon: '-10,138,-10,154,-29,154,-34,152,-34,141,-29,138',
+  // useDeviceLocation: true,
+  // computeQueryParams: 'abcd=1234',
+});
+
+// you can listen for any error thrown by the database
+placesAutocomplete.addListener('error', (e) => {
+  console.log('[database error]', e.message);
+})
+
+// just some crud for demo purposes
+const demo = {
+  el: {
+    search: document.querySelector('#search'),
+  },
+  init() {
+    // see the 'demo-util.js' file for more info on the below
+    // this adds event listeners based on dom [data] attributes
+    util.domActions(demo.action);
+  },
+  action: {
+    // this updates the database country for the demo
+    loc(e) {
+      const { value, dataset } = e.target;
+      
+      placesAutocomplete.configure({
+        countries: dataset.country && [dataset.country] // only search a specified country
+      });
+
+      // we'll update the placeholder with the country
+      demo.el.search.placeholder = demo.el.search.placeholder.replace(/(Search a city).*/, value ? `$1 in ${value}` : '$1');
+    },
+  }
+}
+
+demo.init();
+
+</script>
+</body>
+</html>

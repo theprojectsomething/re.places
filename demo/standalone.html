@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Re.Places: standalone demo</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="the serverless cities database">
+  <link rel="icon" type="image/svg+xml" href="demo-icon.svg">
+  <link type="text/css" rel="stylesheet" href="demo-style.css">
+</head>
+
+<body>
+  
+<label for="search">
+  <em><span>This is the standalone version (BYO&nbsp;UI!) ... switch to the <a href="algolia.html">Algolia Places version</a></span></em>
+  <input id="search" data-action="search" placeholder="🚀 Search a city" autocomplete="off">
+</label>
+
+<div class="controls">
+  <div class="toggle">
+    Output:
+    <label>
+      <input name="toggle" data-action="output" value="map" type="radio" checked>
+      Map
+    </label>
+    <label>
+      <input name="toggle" data-action="output" value="json" type="radio">
+      JSON
+    </label>
+  </div>
+
+  <div class="countries">
+    <label>
+      <input name="country" data-action="loc" data-bounds="[[-8,110],[-44,158]]" value="Australia" data-country="au" type="radio" checked>
+      Australia
+    </label>
+    <label>
+      <input name="country" data-action="loc" data-bounds="[[42,-5],[51,8]]" value="France" data-country="fr" type="radio">
+      France
+    </label>
+    <label>
+      <input name="country" data-action="loc" value type="radio">
+      Global
+    </label>
+  </div>
+</div>
+
+<div class="output">
+  <div id=map></div>
+  <output id=json></output>
+</div>
+
+<script type="module">
+// STEP 1 --> Import Re.Places.js
+// this is the module version, it runs searches in a web worker
+// it does not polyfill the Algolia Places API, please see the README
+import replaces from 'https://cdn.jsdelivr.net/npm/re.places.js@0.0.4/re.places.js';
+// alternatively you can import the non-module version or include via <script>
+// this will add replaces to the global scope
+// import 'https://cdn.jsdelivr.net/npm/re.places.js@latest/src/re.places.core.js';
+// <script async src="//cdn.jsdelivr.net/npm/re.places.js@latest/src/re.places.core.js">;
+
+// these two imports are specific to this demo - you can ignore them
+import map from './demo-map.js';
+import util from './demo-util.js';
+
+// README (!)
+// You should expect a significant delay on the first query due to
+// the database being lazy-loaded (5-400kb over the wire after first input)
+// If you would prefer to preload the database you can do so by initialising
+// with a { preload: true } attribute and your default search criteria
+// (!) re-init to update the default criteria (this simply changes options)
+// (!) initialisation is optional
+// TRY IT OUT: uncomment the init statement below
+/*
+replaces.init({
+  // e.g. the following options would preload the Australian
+  // database and set is as defualt criteria on all subsequent
+  // queries ... search options will temporarily override any
+  // options included here, but won't be preloaded
+  // uncomment the lines below to try it out
+  countries: ['au'],
+  // without the preload attribute no data will be downloaded
+  // you will only be setting defaults for later
+  // preload: true,
+})
+*/
+
+// this is how you search via the standalone API
+// everything is handled off-thread in a web worker
+const doSearch = async (query) => {
+  const search = await replaces.search({
+    // a string to search
+    query,
+  // SPECIFY A COUNTRY:
+    // format: array of iso2 (2 letter) country codes
+    // (!) this attribute significantly reduces download size
+    // (!) setting this property (currently) overrides 'aroundLatLng'
+    // (!) this is an exclusive filter, non-matches are excluded
+    countries: demo.country && [demo.country],
+ 
+/*  // USE THE USER'S IP TO BOOST SEARCH RESULTS
+    // format: true (default) / false
+    // (!) only active where multiple countries are being searched
+    // (!) uses Cloudflare trace @ 1.1.1.1 to determine user's country
+    // (!) this is an inclusive filter, non-matches aren't excluded
+    // (!) the privacy conscious might consider setting this to false
+    // (!) ... however doing so may negatively effect the user experience
+    aroundLatLngViaIP: false,
+ */
+/*  // SEARCH AROUND A LAT,LNG POINT
+    // format: 'lat,lng' (string)
+    // (!) combines with [aroundRadius] to boost results
+    // (!) setting this property overrides 'aroundLatLng'
+    // (!) this is an inclusive filter, non-matches aren't excluded
+    aroundLatLng: '-16, 145',
+ */
+/*  // DEFINE A MAXIMUM RADIUS AROUND THE POINT TO SEARCH
+    // format: number, defaults to 500000 (=500km)
+    // (!) units are meters
+    // (!) combines with [aroundLatLng] to boost results
+    aroundRadius: 3000000,
+*/
+/*  // SEARCH INSIDE A BOUNDING BOX
+    // format: 'TR_lat, TR_lng, BL_lat, BL_lng' (string)
+    // (!) this is an exclusive filter, non-matches are excluded
+    insideBoundingBox: '-10,154,-29,138',
+ */
+/*  // SEARCH INSIDE A POLYGON
+    // format: 'p1_Lat, p1_Lng, p2_Lat, p2_Lng, ...' (string)
+    // (!) this is an exclusive filter, non-matches are excluded
+    insidePolygon: '-10,138,-10,154,-29,154,-34,152,-34,141,-29,138',
+ */
+  });
+
+  // note that due to the promise-based nature of the library it's
+  // possible to introduce race conditions between queries.
+  // to solve this we return a falsy response whenever a callback
+  // is stale. If you get one you should discard it.
+  // ... check out the demo code below for one way to handle this
+  return search;
+};
+
+
+// just some crud for demo purposes
+const demo = {
+  el: {
+    json: document.querySelector('#json'),
+    search: document.querySelector('#search'),
+  },
+  init() {
+    // see the 'demo-util.js' file for more info on the below
+    // this is just our pretty map
+    map.init();
+
+    // this adds event listeners based on dom [data] attributes
+    util.domActions(demo.action);
+  },
+  action: {
+    // this gets run on search field input
+    async search() {
+      // let's set our query 
+      const query = demo.el.json.dataset.query = demo.el.search.value;
+
+      // we'll also stop the output from updating too often
+      // this timeout gets cancelled later
+      const timeout = setTimeout(() => {
+        if (demo.el.json.dataset.query === query) {
+          demo.el.json.innerHTML = '';
+        }
+      }, 500);
+
+      // if there's no query we'll reset the map
+      if (!query) return map.update();
+
+      // run a search
+      const searchResults = await doSearch(query);
+
+      // once the search returns we can cancel our reset timeout
+      clearTimeout(timeout);
+
+      // IMPORTANT: we need to discard any stale results
+      // stale results are returned as a null response
+      if (!searchResults) return;
+
+      // sweet - let's display our results!
+      demo.el.json.innerHTML = util.objectToPrettyJson(searchResults);
+      // on the map too
+      map.update(searchResults.hits);
+    },
+    // this focuses the search field
+    trysearch() {
+      demo.el.search.focus();
+      demo.el.search.scrollIntoView(true);
+    },
+    // this updates the database and zooms the map
+    loc(e) {
+      const { value, dataset } = e.target;
+      // let's store the country code
+      demo.country = dataset.country;
+      
+      // we've stored some bounds in the dom too
+      const bounds = dataset.bounds && JSON.parse(dataset.bounds);
+      // if no bounds are set this just zooms to global level
+      map.fitBounds(bounds);
+
+      // we'll update the placeholder with the country
+      demo.el.search.placeholder = demo.el.search.placeholder.replace(/(Search a city).*/, value ? `$1 in ${value}` : '$1');
+
+      // and do another search with new database
+      demo.action.search();
+    },
+    // this just toggles the visible output
+    output(e) {
+      demo.el.json.parentElement.dataset.toggle = e.target.value;
+    },
+  },
+};
+
+// let's go!
+demo.init();
+
+</script>
+<style>
+
+
+</style>
+</body>
+</html>

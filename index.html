@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Introducing Re.Places: the serverless cities database</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="the serverless cities database">
+  <link rel="icon" type="image/svg+xml" href="demo/demo-icon.svg">
+  <link type="text/css" rel="stylesheet" href="demo/demo-style.css">
+</head>
+
+<body>
+<header>
+  <div>
+    <h1>
+      <small>Re:</small><br>
+      <strong>Places<span>.js</span></strong>
+    </h1>
+
+    <p>Ok, so still not quite on par with the amazing <code>&lt;Algolia-Places&gt;</code> ...</p>
+  </div>
+  <img src="demo/demo-icon.svg">
+  <p><strong>re:places</strong> is a serverless database of 41,000 global cities for your browser. Designed as a light-weight polyfill for &lsquo;cities&rsquo; from Algolia's places API, ahead of the service&rsquo;s sunset <a href="https://www.algolia.com/blog/product/sunsetting-our-places-feature/">in May 2022</a>. It also runs standalone.</p>
+
+  <div>
+    <button onclick="searchacity()" class="btn">Search a city</button>
+  </div>
+</header>
+
+<div class="bg-white features">
+  <h2>Some basic features:</h2>
+  <ul>
+    <li>Blazingly fast, a round-trip query averages <strong>20-30ms</strong></li>
+    <li>Lazy-load a global cities database in <strong>under 400kB</strong> over the wire</li>
+    <li>Filter by country to optimise file size: France weighs in at <strong>20kB</strong> and Australia comes in under <strong>5kB</strong></li>
+    <li>Filter results based on a user's <code>IP</code>, proximity to a <code>lat,lng</code>, or the area inside a <code>polygon</code> or <code>bounding box</code></li>
+    <li>Standalone, or as a zero-config proxy to extend the life of <a href="https://github.com/algolia/places/">Algolia's Places.js</a> (beyond their API shutdown)</li>
+    <li>Entirely static, nothing required beyond your favourite CDN or storage bucket</li>
+    <li>Entirely free and open source (code is <strong><a href="https://github.com/theprojectsomething/re.places/blob/master/LICENSE">MIT licensed</a></strong>, database is <strong><a href="https://simplemaps.com/data/world-cities" title="Our database is derived from the World Cities Database basic edition (CC BY 4.0) available from SimpleMaps.com">CC BY 4.0</a></strong>)</li>
+    <li>Contributions celebrated!</li>
+  </ul>
+
+  <p>
+    <small>
+      <strong>re:places</strong> depends on <a title="MiniSearch: Tiny and powerful JavaScript full-text search engine for browser and Node" href="https://github.com/lucaong/minisearch">@lucaong/MiniSearch</a> and <a href="https://github.com/rowanwins/point-in-polygon-hao" title="A point in polygon library based on the paper 'Optimal Reliable Point-in-Polygon Test and Differential Coding Boolean Operations on Polygons' by Hao">@rowanwins/point-in-polygon-hao</a> (both MIT / 0 dependencies). The database is derived from the basic World Cities Database available from <a href="https://simplemaps.com/data/world-cities">SimpleMaps.com</a> (CC BY 4.0). Ideas mixed in from <a title="@turf/distance: haversine distance (MIT)" href="https://github.com/Turfjs/turf/tree/master/packages/turf-distance">@turfjs</a> and <a title="Unicode property escapes" href="https://stackoverflow.com/a/37511463/720204">this stackoverflow answer</a>. Cloudflare's 1.1.1.1 supplies <a href="https://1.1.1.1/cdn-cgi/trace">location hints</a>. Informing everything, of course, is the masterwork that is <a href="https://community.algolia.com/places/">Algolia Places</a>.<br>All amazing efforts. Thank you so much.</small></p>
+
+  <div class="actions">
+    <button onclick="searchacity()" class="btn">Search a city</button> <small>or</small> 
+    <a class="btn" href="https://github.com/theprojectsomething/re.places">Fork it on GitHub</a>
+  </div>
+</div>
+
+<iframe allowtransparency scrolling="no" style="border:none;min-height: 400px;"></iframe>
+
+
+<footer>
+  <div>
+    <span><small>re:<strong>places</strong> © 2022 <a href="https://theprojectsomething.com">theprojectsomething</a> | <a href="https://github.com/theprojectsomething/re.places/blob/master/LICENSE">MIT license</a> | <a href="https://github.com/theprojectsomething/re.places">Github</a> | <a href="https://github.com/sponsors/theprojectsomething">Support the project</a></small></span><span>Hand made with <small>🖤</small> in Cairns, Australia<br><small>(after I got an email last week reminding me that Places.js was disappearing)<br><small><em>Page design is heavily influenced by <a href="https://community.algolia.com/places/">Algolia Places</a>. Yes, imitation is the sincerest form of flattery.</em></small></small></span>
+  </div>
+</footer>
+
+<script>
+/***
+ * THE CODE BELOW HAS NOTHING TO DO WITH THE LIBRARY OR DEMOS!
+ * ===
+ * 
+ * Demo code is available at the links below or in the iframe source:
+ * - docs/standalone.html
+ * - docs/algolia.html
+ * 
+ * Thanks!
+ ***/
+
+// focus on the search input
+const searchacity = () => {
+  const searchinput = iframe.contentDocument.querySelector('#search');
+  searchinput.focus();
+  searchinput.scrollIntoView(true);
+}
+
+// update iframe height on resize
+const onresize = () => {
+  iframe.height = iframe.contentDocument.body.scrollHeight;
+}
+
+// check the hash 
+const isAlgoliaHash = () =>
+  location.hash === '#algolia';
+
+// check the iframe url
+const isAlgoliaDemo = () =>
+  iframe.contentDocument.location.pathname.indexOf('algolia') > 0;
+
+// get the doc to load based on the current hash
+const getSrc = () =>
+  isAlgoliaHash() ? `demo/${location.hash.slice(1)}.html` : 'demo/standalone.html';
+
+// get the iframe and set it's initial state
+const iframe = document.querySelector('iframe');
+iframe.style.visibility = 'hidden';
+iframe.src = getSrc();
+
+// listen for changes in dimensions to an iframe sibling element
+// then get and refresh the iframe's height accordingly
+// (a sibling instead of the iframe saves the method running twice)
+new ResizeObserver(onresize)
+.observe(iframe.previousElementSibling);
+
+// listen for the iframe's load event each time the source changes
+iframe.addEventListener('load', () => {
+  // set a transparent background
+  iframe.contentDocument.head.innerHTML += '<style>html{background:transparent !important;}</style>';
+
+  // hide on unload
+  iframe.contentWindow.onunload = () => {
+    iframe.style.visibility = 'hidden';
+  }
+  
+  // resize to fit the rendered contents
+  setTimeout(() => onresize(), 100);
+
+  // update the hash to reflect the content
+  if (isAlgoliaDemo()) {
+    location.hash = 'algolia';
+  } else if (location.hash === '#algolia') {
+    history.replaceState(null, null, ' ');
+  }
+
+  // ready to go - show the iframe
+  iframe.style.visibility = 'visible';
+});
+
+// update the content if the hash changes and the content isn't in sync
+window.addEventListener('hashchange', () => {
+  if ((isAlgoliaDemo() && !isAlgoliaHash()) || (!isAlgoliaDemo() && isAlgoliaHash())) {
+    iframe.src = getSrc();
+  }
+});
+</script>
+
+</body>
+</html>

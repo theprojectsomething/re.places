@@ -1,0 +1,13 @@
+World Cities Database (and derived files)
+===
+
+License: Attribution 4.0 International [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+Attribution: [SimplMaps.com](https://simplemaps.com/data/world-cities)
+
+> We're proud to offer a simple, accurate and up-to-date database of the world's cities 
+> and towns. We've built it from the ground up using authoritative sources such as the 
+> NGIA, US Geological Survey, US Census Bureau, and NASA.
+> *SimpleMaps.com*
+
+**Changes to original data:**
+To optimise for filesize and usage, the original dataset has been processed to emit some fields and generate unique files for each iso2 country code.
