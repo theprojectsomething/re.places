@@ -1,5 +1,5 @@
 if (self.WorkerGlobalScope) {
-  const swUrl = 'https://cdn.jsdelivr.net/npm/re.places.js@0.1.0/src/re.places.algolia.sw.js';
+  const swUrl = 'https://cdn.jsdelivr.net/npm/re.places.js@0.1.1/src/re.places.algolia.sw.js';
   self.importScripts(swUrl);
 } else {
 
@@ -14,11 +14,17 @@ if (self.WorkerGlobalScope) {
 
   // include the name of the file you are currently looking at here
   // we will check if it has been correctly registered
-  const nameOfThisFile = 're.places.algolia.js';
+  let locationOfThisFile;
+  try {
+    const [url] = new Error().stack.match(/https.*?\.js(?=:)/) || '';
+    locationOfThisFile = new URL(url).pathname || 're.places.algolia.js';
+  } catch (e) {
+    locationOfThisFile = 're.places.algolia.js';
+  }
 
   const initAlgoliaServiceWorker = () =>
     navigator.serviceWorker
-    .register(`/${nameOfThisFile}`)
+    .register(locationOfThisFile)
     .then((registration) => {
       registration.update()
       registration.addEventListener('updatefound', () => {
@@ -31,11 +37,11 @@ if (self.WorkerGlobalScope) {
   navigator.serviceWorker.getRegistrations().then((registrations) => {
     for (const registration of registrations) {
       const scriptURL = registration.active && registration.active.scriptURL;
-      if (scriptURL && !scriptURL.endsWith(nameOfThisFile)) {
+      if (scriptURL && !scriptURL.endsWith(locationOfThisFile)) {
         throw new Error('[could not install re:places service worker: worker already exists at this scope]');
       }
     }
-    initAlgoliaServiceWorker()
+    initAlgoliaServiceWorker();
     // we're not catching errors - we want them to throw
   });
 }
