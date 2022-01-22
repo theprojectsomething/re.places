@@ -11,7 +11,7 @@ const importScripts = {
 // a simple state storage system
 const store = {
   // dataPath: '/db',
-  dataPath: 'https://cdn.jsdelivr.net/npm/re.places.js@0.0.9-a/db',
+  dataPath: 'https://cdn.jsdelivr.net/npm/re.places.js@0.1.0/db',
   fetch: {},
   defaultParams: {
     aroundLatLngViaIP: true,

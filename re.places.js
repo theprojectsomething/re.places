@@ -1,7 +1,7 @@
 // #TODO
 // - implement non-CDN option, e.g. by specifying a local path
 
-const workerUrl = 'https://cdn.jsdelivr.net/npm/re.places.js@0.0.9-a/src/re.places.dw.js';
+const workerUrl = 'https://cdn.jsdelivr.net/npm/re.places.js@0.1.0/src/re.places.dw.js';
 let placesWorker;
 let activePost;
 
