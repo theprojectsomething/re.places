@@ -123,17 +123,17 @@ header > p {
   position: absolute;
   background: inherit;
   left: 0;
-  height: 15em;
+  height: 16em;
   transform: skewY(-2.75deg) translateY(-45%);
   z-index: -1;
 }
 
 .features:before {
-  box-shadow: 0 14em 0 0 white;
+  box-shadow: 0 15em 0 0 white;
 }
 
 .features:after {
-  box-shadow: 0 -14em 0 0 white;
+  box-shadow: 0 -15em 0 0 white;
 }
 
 .features h2 {

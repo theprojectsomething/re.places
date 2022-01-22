@@ -39,7 +39,7 @@ import replaces from 'https://cdn.jsdelivr.net/npm/re.places.js@0.0.9-a/re.place
 ```
 2. Search a city:
 ```js
-// this downloads the Australia db (5kb) and runs a search
+// this downloads the Australia database (5kb) and runs a search
 replaces.search({
   query: 'Cairns',
   countries: ['au'],
