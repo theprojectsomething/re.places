@@ -1,4 +1,4 @@
-const coreUrl = 'https://cdn.jsdelivr.net/npm/re.places.js@0.1.1/src/re.places.core.js';
+const coreUrl = 'https://cdn.jsdelivr.net/npm/re.places.js@0.1.2/src/re.places.core.js';
 importScripts(coreUrl);
 
 onmessage = ({ data }) => {

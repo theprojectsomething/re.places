@@ -1,10 +1,11 @@
 {
   "name": "re.places.js",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A serverless database of 41,000 global cities for your browser. Designed as a light-weight polyfill for ‘cities’ from Algolia's places API, ahead of the service’s sunset in May 2022. It also runs standalone.",
   "main": "re.places.js",
   "type": "module",
   "repository": "github:theprojectsomething/re.places",
+  "homepage": "https://theprojectsomething.github.io/re.places/",
   "scripts": {
     "build-db": "node src/build-db.js",
     "demo": "http-server -c-1 -b -g -S -C ~/.ssh/localhost+4.pem -K ~/.ssh/localhost+4-key.pem"

@@ -5,7 +5,7 @@ Re:**Places**.js
 
 **re:places** is a serverless database of 41,000 global cities for your browser. Designed as a light-weight polyfill for ‘cities’ from Algolia's Places API, ahead of the service’s sunset [in May 2022](https://www.algolia.com/blog/product/sunsetting-our-places-feature/). It also runs standalone.
 
-### Try it out: [Search a city [demo]](https://theprojectsomething.github.io/re.places/)  
+### Try it out: [Search a city [demo]](https://theprojectsomething.github.io/re.places/)
 **Install**
 1. [Standalone install](#standalone) [[demo](https://theprojectsomething.github.io/re.places/demo/standalone.html)]
 2. [Polyfill Algolia Places API](#algolia) [[demo](https://theprojectsomething.github.io/re.places/demo/algolia.html)]
@@ -32,10 +32,10 @@ re:**places**.js is currently intended to be installed from a CDN, with the exce
 
 1. Import [re.places.js](https://github.com/theprojectsomething/re.places/blob/master/re.places.js) into your script or document
 ```js
-import replaces from 'https://cdn.jsdelivr.net/npm/re.places.js@0.0.9-a/re.places.js'
+import replaces from 'https://cdn.jsdelivr.net/npm/re.places.js@0.1.2/re.places.js'
 ```
 ```html
-<script async src="https://cdn.jsdelivr.net/npm/re.places.js@0.0.9-a/re.places.js"></script>
+<script async src="https://cdn.jsdelivr.net/npm/re.places.js@0.1.2/re.places.js"></script>
 ```
 2. Search a city:
 ```js
@@ -95,7 +95,7 @@ The above install will throw an error where a service worker is already installe
 
 1. Edit your main service worker to add the following line to the top of the file
 ```js
-self.importScripts('https://cdn.jsdelivr.net/npm/re.places.js@0.0.9-a/src/re.places.algolia.sw.js')
+self.importScripts('https://cdn.jsdelivr.net/npm/re.places.js@0.1.2/src/re.places.algolia.sw.js')
 // YOUR SERVICE WORKER LOGIC GOES HERE
 ```
 
