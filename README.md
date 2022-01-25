@@ -14,7 +14,7 @@ Re:**Places**.js
 Some basic features
 --------------------
 
-*   Blazingly fast, a round-trip query averages **20-30ms**[^1]
+*   Faster than you need; a round-trip query averages **20-30ms**[^1]
 *   Lazy-load the global cities database in **under 400kB**[^2] over the wire
 *   Filter by country to optimise file size: France weighs in at **20kB**[^2] and Australia comes in under **5kB**[^2]
 *   Filter results based on a user's `IP`, proximity to a `lat,lng`, or the area inside a `polygon` or `bounding box`
@@ -26,7 +26,7 @@ Some basic features
 Installation & Use
 --------------------
 
-re:**places**.js is currently intended to be installed from a CDN, with the exception of the polyfill (service worker) script. While modules are in use, they rely on remote imports. This is primarily because the library was coded by hand, without a package manager, and so doesn't have any build steps that might facilitate different versions (UMD, local es6 modules, etc.) Future versions should resolve this shortcoming and provide for a straightforward `npm i` process. That said, porting the library to run locally [is trivial](#self-hosted).
+re:**places**.js is currently intended to be installed from a CDN, with the exception of the polyfill (service worker) script. While modules are in use, they rely on remote imports. This is primarily because the library was coded by hand, without a package manager, and so doesn't have any build steps that might facilitate different versions (UMD, local es6 modules, etc.) Future versions should resolve this shortcoming and provide for a straightforward `npm i` process. That said, porting the library to run local [is trivial](#self-hosted).
 
 <h3 name="standalone">Standalone install [<a href="https://github.com/theprojectsomething/re.places/blob/master/demo/standalone.html">example</a>]</h3>
 
@@ -72,7 +72,7 @@ replaces.init({
 // any options you provide to a search are merged with your default options
 const result = await replaces.search({
   query: 'ca',
-  // for this search we do want to weight by IP location
+  // for this search we want to weight by IP location (even though we turned it off above)
   aroundLatLngViaIP: true,
 });
 
@@ -91,7 +91,7 @@ import '/re.places.algolia.js'
 
 #### Polyfill with a service worker already in place
 
-The above install will throw an error where a service worker is already installed on a domain. To resolve, import [re.places.algolia.sw.js](https://github.com/theprojectsomething/re.places/blob/master/src/re.places.algolia.sw.js) _at the top_ of the existing script. Re.Places only intercepts calls to the Algolia API and does not use any caching strategy. Imported at the top of your script it will work in tandem with any logic already in place.
+The above install will throw an error where a service worker is already installed on a domain. To resolve, import [re.places.algolia.sw.js](https://github.com/theprojectsomething/re.places/blob/master/src/re.places.algolia.sw.js) _at the top_ of the existing service worker script. Re.Places only intercepts calls to the Algolia API and does not use any caching strategy. Imported at the top of your script it will work in tandem with any logic already in place.
 
 1. Edit your main service worker to add the following line to the top of the file
 ```js
@@ -118,7 +118,7 @@ Check out the source of the demo pages for more detailed explanations of each se
 <sub>**re:places © 2022 [theprojectsomething](https://theprojectsomething.com) | [MIT license](https://github.com/theprojectsomething/re.places/blob/master/LICENSE) | [Github](https://github.com/theprojectsomething/re.places) | [Support the project](https://github.com/sponsors/theprojectsomething)**</sub><br>
 <sup>Hand made with 🖤 in Cairns, Australia</sup>
 
-[^1]: The initial query tends to run significantly slower due to lazy-loading the database and an actual network connection being required ¯\\_(ツ)_/¯ ... pre-loading the database is possible but is disabled by default (and isn't recommended unless restricting by country)
+[^1]: In Cairns, Australia, queries to the Algolia Places API average 250ms (and it feels nice!). With **re:places** the initial query will run slower due to lazy-loading the database (and an actual network connection being required!) ¯\\_(ツ)_/¯ ... after that you're latency free. See the [advanced setup](#advanced-setup) for pre-loading instructions.
 [^2]: The included build script generates a brotli compressed global database weighing in at 396kB, useful for self hosting. CDN compression varies, e.g. ~**480kB** gzip from JSDelivr / **508kB** br from unpkg
 [^3]: **re:places** depends on [@lucaong/MiniSearch](https://github.com/lucaong/minisearch "MiniSearch: Tiny and powerful JavaScript full-text search engine for browser and Node") and [@rowanwins/point-in-polygon-hao](https://github.com/rowanwins/point-in-polygon-hao "A point in polygon library based on the paper 'Optimal Reliable Point-in-Polygon Test and Differential Coding Boolean Operations on Polygons' by Hao") (both MIT / 0 dependencies).  
 The database is derived from the basic World Cities Database available from [SimpleMaps.com](https://simplemaps.com/data/world-cities) (CC BY 4.0).  
