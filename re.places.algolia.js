@@ -1,5 +1,5 @@
 if (self.WorkerGlobalScope) {
-  const swUrl = 'https://cdn.jsdelivr.net/npm/re.places.js@0.1.2/src/re.places.algolia.sw.js';
+  const swUrl = 'https://cdn.jsdelivr.net/npm/re.places.js@0.1.3/src/re.places.algolia.sw.js';
   self.importScripts(swUrl);
 } else {
 

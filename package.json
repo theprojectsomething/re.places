@@ -1,6 +1,6 @@
 {
   "name": "re.places.js",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A serverless database of 41,000 global cities for your browser. Designed as a light-weight polyfill for ‘cities’ from Algolia's places API, ahead of the service’s sunset in May 2022. It also runs standalone.",
   "main": "re.places.js",
   "type": "module",

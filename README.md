@@ -30,12 +30,12 @@ re:**places**.js is currently intended to be installed from a CDN, with the exce
 
 <h3 name="standalone">Standalone install [<a href="https://github.com/theprojectsomething/re.places/blob/master/demo/standalone.html">example</a>]</h3>
 
-1. Import [re.places.js](https://github.com/theprojectsomething/re.places/blob/master/re.places.js) into your script or document
+1. Import [re.places.js](https://github.com/theprojectsomething/re.places/blob/master/re.places.js) into your script (i.e. a module) or document
 ```js
-import replaces from 'https://cdn.jsdelivr.net/npm/re.places.js@0.1.2/re.places.js'
+import replaces from 'https://cdn.jsdelivr.net/npm/re.places.js@0.1.3/re.places.js'
 ```
 ```html
-<script async src="https://cdn.jsdelivr.net/npm/re.places.js@0.1.2/re.places.js"></script>
+<script type="module" async src="https://cdn.jsdelivr.net/npm/re.places.js@0.1.3/re.places.js?global"></script>
 ```
 2. Search a city:
 ```js
@@ -95,7 +95,7 @@ The above install will throw an error where a service worker is already installe
 
 1. Edit your main service worker to add the following line to the top of the file
 ```js
-self.importScripts('https://cdn.jsdelivr.net/npm/re.places.js@0.1.2/src/re.places.algolia.sw.js')
+self.importScripts('https://cdn.jsdelivr.net/npm/re.places.js@0.1.3/src/re.places.algolia.sw.js')
 // YOUR SERVICE WORKER LOGIC GOES HERE
 ```
 

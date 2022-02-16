@@ -1,7 +1,13 @@
 // #TODO
 // - implement non-CDN option, e.g. by specifying a local path
 
-const workerUrl = 'https://cdn.jsdelivr.net/npm/re.places.js@0.1.2/src/re.places.dw.js';
+const fileURL = () => {
+  const [href] = new Error().stack.match(/http.*?\.js(?:\?.*?)?(?=(?::\d+){1,})/) || '';
+  const url = new URL(href || self.location.href);
+  return url;
+};
+
+const workerUrl = 'https://cdn.jsdelivr.net/npm/re.places.js@0.1.3/src/re.places.dw.js';
 let placesWorker;
 let activePost;
 
@@ -47,5 +53,12 @@ export const search = async (params) => {
     activePost.resolve = resolve;
   });
 }
+
+try {
+  if (fileURL().searchParams.has('global')) {
+    const globalKey = fileURL().searchParams.get('global') || 'replaces';
+    self[globalKey] = { init, search }
+  }
+} catch (e) {/**/}
 
 export default { init, search };
